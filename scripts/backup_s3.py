@@ -5,15 +5,15 @@ from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 
 # --- CẤU HÌNH ---
-# 1. Load biến môi trường từ file .env (Để bảo mật thông tin)
+# 1. Load biến môi trường từ file .env 
 # Lấy đường dẫn tuyệt đối của file .env để Crontab không bị lỗi
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Giả sử file .env nằm ở thư mục cha (nếu nằm cùng thư mục thì bỏ '..')
+
 load_dotenv(os.path.join(script_dir, '../.env'))
 
 MINIO_ENDPOINT = 'http://localhost:9000'
-ACCESS_KEY = os.getenv('MINIO_ROOT_USER', 'admin') # Lấy từ .env
-SECRET_KEY = os.getenv('MINIO_ROOT_PASSWORD', 'password123') # Lấy từ .env
+ACCESS_KEY = os.getenv('MINIO_ROOT_USER', 'admin') 
+SECRET_KEY = os.getenv('MINIO_ROOT_PASSWORD', 'password123') 
 BUCKET_NAME = 'backup-files'
 
 # 2. Khởi tạo Client
@@ -39,16 +39,16 @@ def upload_to_minio(local_file, bucket_name, s3_file):
         print(f" Loi khac: {e}")
         return False
 
-# --- PHẦN CHẠY CHÍNH (MAIN) ---
+# --- PHẦN CHẠY CHÍNH ---
 if __name__ == "__main__":
-    # 3. Tạo file dữ liệu mẫu kèm thời gian (Timestamp)
+    # 3. Tạo file dữ liệu mẫu kèm thời gian 
     # Định dạng: db_dump_Năm-Tháng-Ngày_Giờ-Phút-Giây.txt
     now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     local_filename = f"db_dump_{now}.txt"
-    # Lưu vào thư mục con 'daily_backups' trên MinIO để gọn gàng
+    # Lưu vào thư mục con 'daily_backups' trên MinIO 
     s3_filename = f"daily_backups/db_dump_{now}.txt"
 
-    # Tạo nội dung giả (Giả lập backup database)
+    # Tạo nội dung mẫu
     with open(local_filename, "w") as f:
         f.write(f"Du lieu backup tu dong luc {now}\n")
         f.write("Day la du lieu quan trong can luu tru.")
